@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import app from "./app.js";
 import connectDB from "./config/db.js";
 
 const PORT = process.env.PORT || 5000;
@@ -18,6 +17,10 @@ if (missingEnv.length > 0) {
   console.error(`Missing required environment variables: ${missingEnv.join(", ")}`);
   process.exit(1);
 }
+
+console.log("Environment check passed");
+
+const { default: app } = await import("./app.js");
 
 await connectDB();
 
