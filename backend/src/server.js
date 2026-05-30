@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import app from "./app.js"; // Changed from dynamic import to static import
 import connectDB from "./config/db.js";
 
 const PORT = process.env.PORT || 5000;
@@ -21,11 +22,11 @@ if (missingEnv.length > 0) {
 try {
   console.log("Environment check passed");
 
-  const { default: app } = await import("./app.js");
-
+  // Establish Database Connection
   await connectDB();
 
-  const server = app.listen(PORT, () => {
+  // Bind server listener explicitly to 0.0.0.0 for Render's internal proxy tracking
+  const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
   });
 
@@ -44,13 +45,8 @@ try {
   console.error("Startup Error Code:", error?.code || "NO_CODE");
   console.error("Startup Error Message:", error?.message || error);
 
-  if (error?.reason) {
-    console.error("Startup Error Reason:", error.reason);
-  }
-
   if (error?.stack) {
     console.error(error.stack);
   }
-
   process.exit(1);
 }
