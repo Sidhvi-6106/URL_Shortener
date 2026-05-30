@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: url-shortener-19le
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        value: https://url-shortener-19le.onrender.com
+      - key: CLIENT_URL
+        value: https://url-shortener-rose-one.vercel.app
+      - key: CLIENT_URLS
+        value: https://url-shortener-rose-one.vercel.app
+      - key: JWT_SECRET
+        sync: false
+      - key: MONGO_URI
+        sync: false

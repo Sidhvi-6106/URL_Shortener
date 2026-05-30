@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import api from "../api/axios";
+
 const RedirectPage = () => {
   const { shortCode } = useParams();
   const [status, setStatus] = useState("loading");
@@ -13,17 +15,15 @@ const RedirectPage = () => {
     setErrorMessage("");
 
     try {
-      const params = new URLSearchParams({ resolve: "1" });
-
-      if (providedPassword) {
-        params.set("password", providedPassword);
-      }
-
-      const response = await fetch(`/api/url/${shortCode}?${params.toString()}`, {
-        credentials: "same-origin",
+      const response = await api.get(`/url/${shortCode}`, {
+        params: {
+          resolve: "1",
+          ...(providedPassword ? { password: providedPassword } : {}),
+        },
+        validateStatus: () => true,
       });
 
-      const data = await response.json().catch(() => ({}));
+      const data = response.data || {};
 
       if (data.requiresPassword) {
         setStatus("password");
@@ -41,7 +41,7 @@ const RedirectPage = () => {
         return;
       }
 
-      if (!response.ok) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(data.message || "Unable to open this link right now.");
       }
 

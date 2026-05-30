@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const configuredBaseURL = import.meta.env.VITE_API_URL || "/api";
+const configuredBaseURL = import.meta.env.VITE_API_URL || "https://url-shortener-19le.onrender.com/api";
 
 const isLocalhost = (value) => ["localhost", "127.0.0.1", "::1"].includes(value);
 

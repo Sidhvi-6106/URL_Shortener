@@ -49,8 +49,8 @@ const replaceLocalhostWithLan = (value) => {
 
 export const getBaseUrl = () => {
   const configuredUrl =
-    process.env.CLIENT_URL ||
     process.env.BASE_URL ||
+    process.env.CLIENT_URL ||
     `http://localhost:${process.env.PORT || 5000}`;
 
   return replaceLocalhostWithLan(configuredUrl).replace(/\/$/, "");

@@ -12,9 +12,6 @@ import { redirectToOriginalUrl } from "./controllers/urlController.js";
 
 const app = express();
 
-// Use the dynamic environment variable BASE_URL with a fallback to your current active Render URL
-const API_BASE_URL = process.env.BASE_URL || "https://url-shortener-19le.onrender.com";
-
 const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "")
   .split(",")
   .map((origin) => origin.trim())
