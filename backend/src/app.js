@@ -11,7 +11,7 @@ import sanitizeInput from "./middleware/sanitizeInput.js";
 import { redirectToOriginalUrl } from "./controllers/urlController.js";
 
 const app = express();
-
+const API_BASE_URL = "https://url-shortener-backend-sidhvi.onrender.com";
 const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "")
   .split(",")
   .map((origin) => origin.trim())
