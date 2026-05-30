@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import app from "./app.js"; // Changed from dynamic import to static import
+import app from "./app.js"; 
 import connectDB from "./config/db.js";
 
 const PORT = process.env.PORT || 5000;
@@ -20,33 +20,41 @@ if (missingEnv.length > 0) {
 }
 
 try {
-  console.log("Environment check passed");
+  console.log("Environment check passed. Initializing setup...");
 
-  // Establish Database Connection
+  // 1. Check Database connection phase
+  console.log("Attempting to connect to MongoDB...");
   await connectDB();
+  console.log("MongoDB Connection promise resolved successfully!");
 
-  // Bind server listener explicitly to 0.0.0.0 for Render's internal proxy tracking
+  // 2. Check Server binding phase
+  console.log(`Attempting to bind Express to port ${PORT}...`);
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`🚀 SUCCESS: Server permanently listening on port ${PORT}`);
   });
 
   process.on("unhandledRejection", (error) => {
-    console.error("Unhandled Rejection:", error);
-    server.close(() => process.exit(1));
+    console.error("💥 Unhandled Rejection Caught:", error);
+    if (server && typeof server.close === "function") {
+      server.close(() => process.exit(1));
+    } else {
+      process.exit(1);
+    }
   });
 
   process.on("SIGTERM", () => {
-    server.close(() => {
-      console.log("Server closed");
-    });
+    console.log("SIGTERM signal received. Shutting down cleanly...");
+    if (server && typeof server.close === "function") {
+      server.close(() => console.log("Server closed"));
+    }
   });
 } catch (error) {
-  console.error("Startup Error Name:", error?.name || "UnknownError");
-  console.error("Startup Error Code:", error?.code || "NO_CODE");
-  console.error("Startup Error Message:", error?.message || error);
+  console.error("❌ CRITICAL STARTUP ERROR:");
+  console.error("Error Name:", error?.name || "UnknownError");
+  console.error("Error Message:", error?.message || error);
 
   if (error?.stack) {
-    console.error(error.stack);
+    console.error("Error Stack Trace:\n", error.stack);
   }
   process.exit(1);
 }
