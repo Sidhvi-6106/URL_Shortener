@@ -12,9 +12,19 @@ import { redirectToOriginalUrl } from "./controllers/urlController.js";
 
 const app = express();
 
-const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "")
+const normalizeOrigin = (origin) => origin?.trim().replace(/\/+$/, "");
+
+const configuredOrigins = [
+  process.env.CLIENT_URLS,
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+]
+  .filter(Boolean)
+  .join(",");
+
+const allowedOrigins = configuredOrigins
   .split(",")
-  .map((origin) => origin.trim())
+  .map(normalizeOrigin)
   .filter(Boolean);
 
 if (process.env.NODE_ENV !== "production") {
@@ -23,7 +33,9 @@ if (process.env.NODE_ENV !== "production") {
 
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = normalizeOrigin(origin);
+
+    if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) {
       return callback(null, true);
     }
     return callback(new Error(`CORS blocked origin: ${origin}`));
