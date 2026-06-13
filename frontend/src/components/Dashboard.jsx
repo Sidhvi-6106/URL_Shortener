@@ -37,6 +37,12 @@ const Dashboard = () => {
     }
   };
 
+  const refreshUrlsSoon = () => {
+    window.setTimeout(() => {
+      Promise.resolve().then(loadUrls);
+    }, 1500);
+  };
+
   useEffect(() => {
     Promise.resolve().then(loadUrls);
 
@@ -171,7 +177,13 @@ const Dashboard = () => {
         ) : (
           <div className="grid gap-6">
             {urls.map((url) => (
-              <UrlCard key={url._id} url={url} onUpdate={handleEdit} onDelete={handleDelete} />
+              <UrlCard
+                key={url._id}
+                url={url}
+                onUpdate={handleEdit}
+                onDelete={handleDelete}
+                onVisit={refreshUrlsSoon}
+              />
             ))}
           </div>
         )}

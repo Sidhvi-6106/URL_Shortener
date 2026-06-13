@@ -315,9 +315,13 @@ export const redirectToOriginalUrl = async (req, res) => {
       }
     }
 
-    urlDoc.totalClicks += 1;
-    urlDoc.clicks.push(generateAnalyticsData(req));
-    await urlDoc.save();
+    await URL.updateOne(
+      { _id: urlDoc._id },
+      {
+        $inc: { totalClicks: 1 },
+        $push: { clicks: generateAnalyticsData(req) },
+      }
+    );
 
     if (req.query.resolve === "1") {
       return res.status(200).json({

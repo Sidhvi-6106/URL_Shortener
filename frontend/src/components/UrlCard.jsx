@@ -19,7 +19,7 @@ const formatDateInput = (value) => {
   return `${year}-${month}-${day}`;
 };
 
-const UrlCard = ({ url, onDelete, onUpdate }) => {
+const UrlCard = ({ url, onDelete, onUpdate, onVisit }) => {
   const [qrOpen, setQrOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -175,6 +175,7 @@ const UrlCard = ({ url, onDelete, onUpdate }) => {
             href={url.shortUrl}
             target="_blank"
             rel="noreferrer"
+            onClick={onVisit}
             className="rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)] px-4 py-2 text-sm text-[var(--page-text)] transition hover:bg-[var(--accent-soft)]"
           >
             Visit
