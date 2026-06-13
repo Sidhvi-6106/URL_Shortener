@@ -27,6 +27,8 @@ const allowedOrigins = configuredOrigins
   .map(normalizeOrigin)
   .filter(Boolean);
 
+allowedOrigins.push("https://url-shortener-rose-one.vercel.app");
+
 if (process.env.NODE_ENV !== "production") {
   allowedOrigins.push("http://localhost:5173", "http://127.0.0.1:5173");
 }
